@@ -12,7 +12,6 @@ $accountId = "NT AUTHORITY\SYSTEM"
 $principal = New-ScheduledTaskPrincipal -UserID $accountId -LogonType ServiceAccount  -RunLevel Highest;
 
 $taskName="OneDriveMonitor"
-
 $task = Get-ScheduledJob -Name $taskName  -ErrorAction SilentlyContinue
 if ($task -ne $null)
 {
@@ -20,10 +19,10 @@ if ($task -ne $null)
     Write-Host " @ The old ""$taskName"" PowerShell job has been unregistered"; Write-Host;
 }
 
-$task = Register-ScheduledJob -Name task1  `
+$task = Register-ScheduledJob -Name $taskName  `
 -Trigger  (New-JobTrigger -Once -At $(get-date) -RepetitionInterval (New-TimeSpan -Minutes 5) -RepetitionDuration ([TimeSpan]::MaxValue)) `
 -ScheduledJobOption (New-ScheduledJobOption -RunElevated) `
--ScriptBlock {& "C:\apps\OneDriveMonitor\oneDriveMonitor.ps1"}
+-ScriptBlock {& "c:\scripts\oneDriveMonitor.ps1"}
 
 $psJobsPathInScheduler = "\Microsoft\Windows\PowerShell\ScheduledJobs";
 Set-ScheduledTask -TaskPath $psJobsPathInScheduler -TaskName $taskName  -Principal $principal
