@@ -278,7 +278,7 @@ Add-Type -ReferencedAssemblies 'System', 'System.Runtime.InteropServices' -TypeD
 $scriptblock = {
     Unblock-File 'C:\programdata\Microsoft OneDrive\OneDriveLib.dll'
     import-module 'C:\programdata\Microsoft OneDrive\OneDriveLib.dll'
-    $ODStatus = Get-ODStatus | convertto-json | out-file 'C:\programdata\Microsoft OneDrive\OneDriveLogging.txt'
+    #$ODStatus = Get-ODStatus | convertto-json | out-file 'C:\programdata\Microsoft OneDrive\OneDriveLogging.txt'
 }
 
 $currentUser=$(whoami).split('\')[1]
@@ -290,7 +290,7 @@ if (!($currentUser -eq 'system'))
 }
 
 [murrayju.ProcessExtensions.ProcessExtensions]::StartProcessAsCurrentUser("C:\Windows\System32\WindowsPowershell\v1.0\Powershell.exe", "-command $($scriptblock)","C:\Windows\System32\WindowsPowershell\v1.0",$false)
-#start-sleep 5
+start-sleep 2
 $ErrorList = @("NotInstalled", "ReadOnly", "Error", "OndemandOrUnknown")
 $ODStatus = (get-content "C:\programdata\Microsoft OneDrive\OneDriveLogging.txt" | convertfrom-json).value
 foreach ($ODStat in $ODStatus) {
@@ -299,3 +299,5 @@ foreach ($ODStat in $ODStatus) {
 if (!$ODerrors) {
     $ODerrors = "Healthy"
 }
+
+$ODStatus

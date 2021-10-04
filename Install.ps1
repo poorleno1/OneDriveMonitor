@@ -8,23 +8,10 @@ if (!(Test-Path $path))
 
 Start-BitsTransfer "https://raw.githubusercontent.com/poorleno1/OneDriveMonitor/main/oneDriveMonitor.ps1" -Destination $path
 
-
-
-$path="c:\temp\pstools"
-if (!(Test-Path $path))
-{
-    New-item $path -ItemType Directory -Force -ErrorAction SilentlyContinue    
-}
-Start-BitsTransfer "https://download.sysinternals.com/files/PSTools.zip" -Destination $path
-Expand-Archive "$path\PSTools.zip" $path
-cp $path\psexec* C:\scripts\
-Remove-Item $path -Force -Confirm:$false -Recurse
-
-
 $accountId = "NT AUTHORITY\SYSTEM"
 $principal = New-ScheduledTaskPrincipal -UserID $accountId -LogonType ServiceAccount  -RunLevel Highest;
 
-$taskName="task1"
+$taskName="OneDriveMonitor"
 
 $task = Get-ScheduledJob -Name $taskName  -ErrorAction SilentlyContinue
 if ($task -ne $null)
