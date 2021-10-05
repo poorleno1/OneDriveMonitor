@@ -298,7 +298,7 @@ Add-Type -ReferencedAssemblies 'System', 'System.Runtime.InteropServices' -TypeD
 $scriptblock = {
     Unblock-File 'C:\programdata\Microsoft OneDrive\OneDriveLib.dll'
     import-module 'C:\programdata\Microsoft OneDrive\OneDriveLib.dll'
-    #$ODStatus = Get-ODStatus | convertto-json | out-file 'C:\programdata\Microsoft OneDrive\OneDriveLogging.txt'
+    $ODStatus = Get-ODStatus | convertto-json | out-file 'C:\programdata\Microsoft OneDrive\OneDriveLogging.txt'
 }
 
 $currentUser=$(whoami).split('\')[1]
