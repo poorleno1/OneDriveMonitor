@@ -1,4 +1,24 @@
-﻿$Source = @"
+﻿function Exit-AEM {
+        Param(
+        [string]$Result,
+        $DiagnosticData,
+        [int]$ExitCode
+        )
+
+    '<-Start Result->'
+    "CSMon_Result=$Result"
+    "ExitCode=$ExitCode"
+    '<-End Result->'
+    if($DiagnosticData){
+        '<-Start Diagnostic->'
+        $DiagnosticData
+        '<-End Diagnostic->'
+        }
+
+    Exit $ExitCode
+    }
+
+$Source = @"
 using System;  
 using System.Runtime.InteropServices;
 
@@ -289,15 +309,17 @@ if (!($currentUser -eq 'system'))
     break
 }
 
-[murrayju.ProcessExtensions.ProcessExtensions]::StartProcessAsCurrentUser("C:\Windows\System32\WindowsPowershell\v1.0\Powershell.exe", "-command $($scriptblock)","C:\Windows\System32\WindowsPowershell\v1.0",$false)
+[murrayju.ProcessExtensions.ProcessExtensions]::StartProcessAsCurrentUser("C:\Windows\System32\WindowsPowershell\v1.0\Powershell.exe", "-command $($scriptblock)","C:\Windows\System32\WindowsPowershell\v1.0",$false)|out-null
 start-sleep 2
 $ErrorList = @("NotInstalled", "ReadOnly", "Error", "OndemandOrUnknown")
 $ODStatus = (get-content "C:\programdata\Microsoft OneDrive\OneDriveLogging.txt" | convertfrom-json).value
 foreach ($ODStat in $ODStatus) {
     if ($ODStat.StatusString -in $ErrorList) { $ODerrors = "$($ODStat.LocalPath) is in state $($ODStat.StatusString)" }
 }
-if (!$ODerrors) {
-    $ODerrors = "Healthy"
-}
 
-$ODStatus
+if ($ODerrors -eq "Healthy") {
+    Exit-AEM "Healthy" "" 1
+}
+else {
+    Exit-AEM $ODerrors "OneDrive Sync not functional. Check diagnostics" 1
+}
