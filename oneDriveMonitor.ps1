@@ -318,7 +318,7 @@ foreach ($ODStat in $ODStatus) {
 }
 
 if ($ODerrors -eq "Healthy") {
-    Exit-AEM "Healthy" "" 1
+    Exit-AEM "Healthy" "" 0
 }
 else {
     Exit-AEM $ODerrors "OneDrive Sync not functional. Check diagnostics" 1
